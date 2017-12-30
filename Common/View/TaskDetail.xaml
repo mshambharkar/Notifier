@@ -1,0 +1,44 @@
+﻿<UserControl
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Common.View"
+             xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit" 
+             xmlns:ViewModel="clr-namespace:Common.ViewModel" x:Class="Common.View.TaskDetail"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300" 
+             d:DataContext="{d:DesignInstance {x:Type ViewModel:TaskDetailViewModel}}">
+    <Grid>
+        <GroupBox x:Name="groupBox">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="30*"/>
+                    <ColumnDefinition Width="70*"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Text="Task Id"/>
+                <TextBlock Grid.Column="1" Text="{Binding TaskDetails.Id}"/>
+                <TextBlock Grid.Row="1" Text="Assign To"/>
+                <ComboBox  Grid.Row="1" Grid.Column="1" ItemsSource="{Binding UserColl}" SelectedValuePath="Id" SelectedValue="{Binding TaskDetails.AssignedToId}" DisplayMemberPath="FirstName" />
+                <TextBlock Grid.Row="2" Text="Created by"/>
+                <ComboBox Grid.Row="2" Grid.Column="1" IsEnabled="False" ItemsSource="{Binding UserColl}" SelectedValuePath="Id" SelectedValue="{Binding TaskDetails.CreatorId}" DisplayMemberPath="FirstName" />
+                <TextBlock Grid.Row="3" Text="Task Details"/>
+                <TextBox Grid.Row="3" Grid.Column="1"  AcceptsReturn="True" Height="200" Text="{Binding TaskDetails.TaskDescription}" />
+                <TextBlock Grid.Row="4" Text="Due Date and Time"/>
+                <xctk:DateTimePicker Grid.Column="1"  Grid.Row="4" Value="{Binding TaskDetails.EndDateTime}" />
+                <StackPanel Grid.Row="5" Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalAlignment="Right">
+                    <Button  Content="Save" Command="{Binding SaveCommand, Mode=OneWay}"/>
+                    <Button  Content="Cancel" Command="{Binding ResetCommand, Mode=OneWay}"/>
+                </StackPanel>
+            </Grid>
+        </GroupBox>
+    </Grid>
+</UserControl>

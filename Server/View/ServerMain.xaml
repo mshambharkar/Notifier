@@ -1,0 +1,79 @@
+﻿<UserControl xmlns:View="clr-namespace:Common.View;assembly=Common"  xmlns:xcdg="http://schemas.xceed.com/wpf/xaml/datagrid"  x:Class="Server.View.ServerMain"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Server.View"
+             xmlns:viewMode="clr-namespace:Server.ViewModel"
+              xmlns:converter="clr-namespace:Common.Converters;assembly=Common"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300">
+    <UserControl.DataContext>
+        <viewMode:ServerMainViewModel></viewMode:ServerMainViewModel>
+    </UserControl.DataContext>
+    <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="boolVisibility"></BooleanToVisibilityConverter>
+        <converter:UserIdToNameConverter x:Key="idToNameConverter"></converter:UserIdToNameConverter>
+    </UserControl.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition></RowDefinition>
+            <RowDefinition></RowDefinition>
+        </Grid.RowDefinitions>
+        <TabControl>
+            <TabItem IsSelected="True" Header="Task Management">
+                <StackPanel>
+
+                    <DataGrid  x:Name="dataGridTask" ItemsSource="{Binding TasksCol}"
+                                Height="400"
+                               CanUserAddRows="False" IsReadOnly="True" AutoGenerateColumns="False"
+                               SelectionMode="Single" SelectionUnit="FullRow"
+                               CanUserReorderColumns="True" CanUserResizeColumns="True" 
+                                CanUserResizeRows="False" CanUserSortColumns="True">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Binding="{Binding Id}" ClipboardContentBinding="{x:Null}" Header="Id"/>
+                            <DataGridTextColumn Binding="{Binding AssignedToId,Converter={StaticResource idToNameConverter}}" ClipboardContentBinding="{x:Null}" Header="Assigned To"/>
+                            <DataGridTextColumn Binding="{Binding CreatorId,Converter={StaticResource idToNameConverter}}" ClipboardContentBinding="{x:Null}" Header="Created By"/>
+                            <DataGridTextColumn Binding="{Binding CreationDateTime, StringFormat=\{0:g\}}" ClipboardContentBinding="{x:Null}" Header="Creation Date"/>
+                            <DataGridTextColumn Binding="{Binding EndDateTime, StringFormat=\{0:g\}}" ClipboardContentBinding="{x:Null}" Header="Due Date/Time"/>
+                            <DataGridTextColumn Binding="{Binding TaskDescription}" ClipboardContentBinding="{x:Null}" Header="Task Details"/>
+                            <!--<DataGridCheckBoxColumn Binding="{Binding NotifyCompletion}" ClipboardContentBinding="{x:Null}" Header="Send Completion"/>-->
+                            <DataGridCheckBoxColumn Binding="{Binding IsCompleted}" ClipboardContentBinding="{x:Null}" Header="Task Completed"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                        <View:CommandsView DataContext="{Binding TaskCommands}"
+                                   EditCommandParameter="{Binding SelectedItem,ElementName=dataGridTask}"
+                                    DeleteCommandParameter="{Binding SelectedItem,ElementName=dataGridTask}"/>
+                        <Button Command="{Binding ShowDetailCommand}" CommandParameter="{Binding SelectedItem,ElementName=dataGridTask}">Show Details</Button>
+                    </StackPanel>
+                    
+                </StackPanel>
+            </TabItem>
+            <TabItem Header="User Management">
+                <StackPanel>
+
+                    <DataGrid x:Name="dataGridUser" ItemsSource="{Binding UserDetails}" Height="400"
+                               AutoGenerateColumns="False"
+                              CanUserAddRows="False" IsReadOnly="True"
+                              SelectionMode="Single" SelectionUnit="FullRow"
+                              CanUserReorderColumns="True" CanUserResizeColumns="True" 
+                                CanUserResizeRows="False" CanUserSortColumns="True" HeadersVisibility="Column">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Binding="{Binding Id}" ClipboardContentBinding="{x:Null}" Header="ID"/>
+                            <DataGridTextColumn Binding="{Binding FirstName}" ClipboardContentBinding="{x:Null}" Header="First Name"/>
+                            <DataGridTextColumn Binding="{Binding LastName}" ClipboardContentBinding="{x:Null}" Header="Last Name"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                        <View:CommandsView  DataContext="{Binding UserCommands}" 
+                                    EditCommandParameter="{Binding SelectedItem,ElementName=dataGridUser}"
+                                    DeleteCommandParameter="{Binding SelectedItem,ElementName=dataGridUser}"/>
+                        <Button Command="{Binding ShowDetailCommand}" CommandParameter="{Binding SelectedItem,ElementName=dataGridUser}">Show Details</Button>
+                    </StackPanel>
+                    
+                </StackPanel>
+            </TabItem>
+        </TabControl>
+    </Grid>
+</UserControl>
