@@ -33,7 +33,7 @@
                 <TextBlock Grid.Row="3" Text="Task Details"/>
                 <TextBox Grid.Row="3" Grid.Column="1"  AcceptsReturn="True" Height="200" Text="{Binding TaskDetails.TaskDescription}" />
                 <TextBlock Grid.Row="4" Text="Due Date and Time"/>
-                <xctk:DateTimePicker Grid.Column="1"  Grid.Row="4" Value="{Binding TaskDetails.EndDateTime}" />
+                <xctk:DateTimePicker Grid.Column="1"  Grid.Row="4"  Value="{Binding TaskDetails.EndDateTime}" Format="Custom" FormatString="dd/MM/yyyy HH:mm"/>
                 <StackPanel Grid.Row="5" Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalAlignment="Right">
                     <Button  Content="Save" Command="{Binding SaveCommand, Mode=OneWay}"/>
                     <Button  Content="Cancel" Command="{Binding ResetCommand, Mode=OneWay}"/>

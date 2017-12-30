@@ -66,7 +66,7 @@ namespace WPFNotification.Core
         {
             Notification oldContent = null;
             DataTemplate notificationTemplate = (DataTemplate)Application.Current.Resources[configuration.TemplateName];
-            if (window != null)
+            if (window != null && window.IsVisible)
             {
                 oldContent = window.Content as Notification;
                 window.Close();

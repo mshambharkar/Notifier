@@ -50,8 +50,8 @@ namespace DataLayer
             return new List<Tasks>()
             {
                 new Tasks() {TaskDescription="1",AssignedToId="admin",CreatorId="admin",EndDateTime=DateTime.Now.AddMinutes(4),Id="1234"},
-                new Tasks() {TaskDescription="2",AssignedToId="admin",EndDateTime=DateTime.Now.AddMinutes(7),Id="12334"},
-                new Tasks() {TaskDescription="3",AssignedToId="admin",EndDateTime=DateTime.Now.AddMinutes(12),Id="12234"},
+                new Tasks() {TaskDescription="2",AssignedToId="admin",CreatorId="admin",EndDateTime=DateTime.Now.AddMinutes(7),Id="12334"},
+                new Tasks() {TaskDescription="3",AssignedToId="admin",CreatorId="admin",EndDateTime=DateTime.Now.AddMinutes(12),Id="12234"},
             };
         }
     }

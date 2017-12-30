@@ -37,6 +37,8 @@ namespace Common.ViewModel
             {
                 TaskDetails = new Tasks() { Id = Utility.GetNewId(AppVM.User.Id) };
                 TaskDetails.CreatorId = AppVM.User.Id;
+                TaskDetails.CreationDateTime = DateTime.Now;
+                TaskDetails.EndDateTime = DateTime.Now;
                 changeType = ChnageTypeCallbackEnum.Add;
             }
             else

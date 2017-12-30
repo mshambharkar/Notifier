@@ -1,6 +1,5 @@
 ﻿using ClientBL;
 using Common.Models;
-using Common.Timers;
 using Common.ViewModel;
 using CommonModels;
 using CommonModels.Models;
@@ -11,6 +10,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Timers;
 using System.Windows;
 using WPFNotification.Model;
 using WPFNotification.Services;
@@ -19,6 +19,8 @@ namespace Notifier.ViewModel
 {
     public class AppManager : BaseModel
     {
+        private Timer _dueTimer = new Timer(TimeSpan.FromMinutes(15).TotalMilliseconds);
+        protected DBOperations db = new DBOperations();
         private bool _IsBusy;
         public bool IsBusy
         {
@@ -45,7 +47,7 @@ namespace Notifier.ViewModel
 
 
         private INotificationDialogService _dailogService;
-        DueTasks tasks;
+
 
         public void PerFormCleaning()
         {
@@ -81,7 +83,17 @@ namespace Notifier.ViewModel
         private AppManager()
         {
             _dailogService = new NotficationDialogService();
+            _dueTimer.Elapsed += _dueTimer_Elapsed;
         }
+
+        private void _dueTimer_Elapsed(object sender, ElapsedEventArgs e)
+        {
+            IEnumerable<Tasks> tasks = db.GetAll<Tasks>();
+            var pendingTasks = tasks.Where(a => a.AssignedToId == User.Id && a.IsCompleted == false && a.EndDateTime < DateTime.Now.AddMinutes(17));
+            string[] messages = pendingTasks.Select(a => String.Format("{0}-{1}\n-{2}", a.EndDateTime.ToShortDateString(), a.EndDateTime.ToShortTimeString(), a.TaskDescription)).ToArray();
+            ShowNotification(messages, NotificationRegion.TaskDue);
+        }
+
         private static AppManager _Instance;
 
         public void NotifyRefresh()
@@ -92,6 +104,7 @@ namespace Notifier.ViewModel
         public void LogoffUser()
         {
             User = new User();
+            _dueTimer.Stop();
         }
 
         public static AppManager Instance
@@ -101,6 +114,7 @@ namespace Notifier.ViewModel
                 if (_Instance == null)
                 {
                     _Instance = new AppManager();
+
                 }
                 return _Instance;
             }
@@ -114,6 +128,8 @@ namespace Notifier.ViewModel
             set
             {
                 _User = value;
+
+                _dueTimer.Start();
                 StartCommunicating();
                 OnPropertyChanged(() => User);
                 OnPropertyChanged(() => IsUserLoggedIn);
@@ -126,7 +142,6 @@ namespace Notifier.ViewModel
         {
             if (string.IsNullOrWhiteSpace(User?.Id))
                 return;
-            tasks = new DueTasks();
 
             IsBusy = true;
             BusyMessage = "Making Connections please wait!!";
